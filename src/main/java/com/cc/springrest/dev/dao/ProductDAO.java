@@ -2,33 +2,28 @@ package com.cc.springrest.dev.dao;
 
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import com.cc.springrest.dev.model.Product;
 
 @Repository
-public class ProductDAO {
-
-	@Autowired
-	private SessionFactory factory;
+public class ProductDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Product> getAllProducts() {	
 		return getSession().createCriteria(Product.class).list();
 
 	}
-
-	private Session getSession() {
-		Session session = null;
-		try {
-			session = factory.getCurrentSession();
-		} catch (HibernateException ex) {
-			session = factory.openSession();
+	
+	@SuppressWarnings("unchecked")
+	public Product getProductById(int productId) {	
+		List<Product> products = getSession().createCriteria(Product.class).add(Restrictions.eq("id", productId)).list();
+		if(! CollectionUtils.isEmpty(products)) {
+			return products.get(0);
 		}
-		return session;
+		
+		return null;
 	}
 }

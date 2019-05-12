@@ -7,18 +7,17 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cc.springrest.dev.dao.ProductDAO;
-import com.cc.springrest.dev.model.Product;
+import com.cc.springrest.dev.dao.CustomerDAO;
+import com.cc.springrest.dev.model.Customer;
 
 @Service
 @Transactional
-public class ProductService {
+public class CustomerService {
 
 	@Autowired
-	private ProductDAO productDAO;
+	private CustomerDAO customerDAO;
 	
-	public List<Product> getAllProducts() {
-		return productDAO.getAllProducts();
+	public List<Customer> getAllCustomers() {
+		return customerDAO.getAllCustomers();
 	}
-	
 }

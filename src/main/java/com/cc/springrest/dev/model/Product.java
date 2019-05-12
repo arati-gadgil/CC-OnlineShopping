@@ -1,12 +1,16 @@
 package com.cc.springrest.dev.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "product")
@@ -24,6 +28,10 @@ public class Product implements Serializable {
 	
 	private double price;
 
+	@JsonIgnore
+	@ManyToMany
+	private List<Basket> basket;
+	
 	public int getId() {
 		return id;
 	}
