@@ -1,7 +1,6 @@
 package com.cc.springrest.dev.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,18 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "customers")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer implements Serializable {
 
 	private static final long serialVersionUID = 7014491929940446085L;
@@ -29,49 +21,35 @@ public class Customer implements Serializable {
 	  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
 
-	  @Column(name = "first_name")
+	  @Column(name = "first_name", updatable=false)
 	  private String firstName;
 
-	  @Column(name = "last_name")
+	  @Column(name = "last_name", updatable=false)
 	  private String lastName;
 
-	  @Column(name = "email_address")
+	  @Column(name = "email_address", updatable=false)
 	  private String emailAddress;
-
-	  @Column(name = "date_of_birth")
-	  @JsonFormat(shape = Shape.STRING, pattern = "dd-MM-yyyy")
-	  private LocalDate dateOfBirth;
 
 	  @Column(name = "orders")
 	  @OneToMany(mappedBy = "customer")
 	  private List<Order> orders;
 
-	  @JoinColumn(name = "basket")
-	  @OneToOne(mappedBy = "customer")
-	  private Basket basket;
+	  @OneToMany(mappedBy = "customer")
+	  private List<Basket> baskets;
 
 	  public Customer() {}
 
-	  /**
-	   *
-	   * @param firstName     first name string
-	   * @param lastName      last name
-	   * @param emailAddress  customer email address
-	   * @param dateOfBirth   customers DoB
-	   */
-	  public Customer(String firstName, String lastName, String emailAddress,
-	      LocalDate dateOfBirth) {
+	  public Customer(String firstName, String lastName, String emailAddress) {
 	    this.firstName = firstName;
 	    this.lastName = lastName;
 	    this.emailAddress = emailAddress;
-	    this.dateOfBirth = dateOfBirth;
 	  }
 
-	  public Customer(String firstName, String lastName, String emailAddress, LocalDate dateOfBirth, List<Order> orders,
-	                  Basket basket) {
-	    this(firstName, lastName, emailAddress, dateOfBirth);
+	  public Customer(String firstName, String lastName, String emailAddress, List<Order> orders,
+	                  List<Basket> baskets) {
+	    this(firstName, lastName, emailAddress);
 	    this.orders = orders;
-	    this.basket = basket;
+	    this.baskets = baskets;
 	  }
 
 	  public Long getId() {
@@ -90,67 +68,15 @@ public class Customer implements Serializable {
 	    return emailAddress;
 	  }
 
-	  public LocalDate getDateOfBirth() {
-	    return dateOfBirth;
-	  }
-
 	  public List<Order> getOrders() {
 	    return orders;
 	  }
 
-	  public Basket getBasket() {
-	    return basket;
-	  }
+	public List<Basket> getBaskets() {
+		return baskets;
+	}
 
-	  public void setId(Long id) {
-	    this.id = id;
-	  }
-//	@Id
-//	@GeneratedValue
-//	private int id;
-//	
-//	@Column(name="first_name")
-//	private String firstName;
-//	
-//	@Column(name="last_name")
-//	private String lastName;
-//	
-//	private String email;
-//	
-//	@JsonIgnore
-//	@OneToMany
-//	private List<Basket> basket;
-//
-//
-//	public int getId() {
-//		return id;
-//	}
-//
-//	public void setId(int id) {
-//		this.id = id;
-//	}
-//
-//	public String getFirstName() {
-//		return firstName;
-//	}
-//
-//	public void setFirstName(String firstName) {
-//		this.firstName = firstName;
-//	}
-//
-//	public String getLastName() {
-//		return lastName;
-//	}
-//
-//	public void setLastName(String lastName) {
-//		this.lastName = lastName;
-//	}
-//
-//	public String getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
+	public void setBaskets(List<Basket> baskets) {
+		this.baskets = baskets;
+	}
 }

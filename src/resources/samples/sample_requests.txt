@@ -1,0 +1,42 @@
+
+-- create basket
+-- POST request - request body - basket
+
+http://localhost:8080/abc-onlineshop-api/basket
+
+{
+		"customer": {"id": 2},
+		"orderItems":[{ "itemQuantity": 5, "itemName": "item3", "itemDescription": "test desc 3", "itemPrice": "100 GBP"}]
+}
+
+-- add item to basket
+-- PUT request - basketId and customerId as path variables, request body - order item
+
+http://localhost:8080/abc-onlineshop-api/basket/4/add/6
+
+{
+	 "itemQuantity": 9, "itemName": "add item3", "itemDescription": "add test desc 3", "itemPrice": "200 GBP"
+}
+
+-- delete item from basket
+-- DELETE request - basket id, customer id, item id as path variables
+
+http://localhost:8080/abc-onlineshop-api/basket/1/1/delete/3
+
+-- create new order
+-- POST request - customer id and basket id as path variables
+
+http://localhost:8080/abc-onlineshop-api/order/create/1/2
+
+
+
+-- get all orders for a customer
+-- GET request - customer id as path variable
+
+http://localhost:8080/abc-onlineshop-api/order/getOrdersForCustomer/1
+
+
+-- GET order by ID
+-- GET request - order ID as path variable
+
+http://localhost:8080/abc-onlineshop-api/order/getOrder/7

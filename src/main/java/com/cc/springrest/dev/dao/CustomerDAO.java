@@ -12,7 +12,5 @@ public class CustomerDAO extends BaseDAO {
 	@SuppressWarnings("unchecked")
 	public List<Customer> getAllCustomers() {	
 		return getSession().createCriteria(Customer.class).list();
-
 	}
-
 }
