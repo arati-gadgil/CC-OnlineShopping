@@ -16,10 +16,6 @@ public class BasketService {
 	@Autowired
 	private BasketDAO basketDAO;
 	
-	public void createNewBasket(Basket basket) {
-		basketDAO.createNewBasket(basket);
-	}
-	
 	public Long save(Basket basket) {
 		return basketDAO.save(basket);
 	}

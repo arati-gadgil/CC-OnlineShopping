@@ -38,18 +38,19 @@ public class BasketController {
 	    }
 
 	    if (CollectionUtils.isEmpty(basket.getOrderItems())) {
-	    	return new ResponseEntity<>("Cannot create a basket without order items.", HttpStatus.BAD_REQUEST);
+	    	return new ResponseEntity<>(ResponseConstants.NO_ORDER_ITEMS_IN_BASKET, HttpStatus.BAD_REQUEST);
 	    }
 
 	    if(Objects.isNull(basket.getCustomer())) {
-	    	return new ResponseEntity<>("Cannot create a basket without a customer items.", HttpStatus.BAD_REQUEST);
+	    	return new ResponseEntity<>(ResponseConstants.NO_CUSTOMER_FOUND_IN_REQUEST, HttpStatus.BAD_REQUEST);
 	    }
 
-	    Long basketId = basketService.save(new Basket(basket.getOrderItems(), basket.getCustomer()));
-
+	    //Long basketId = basketService.save(new Basket(basket.getOrderItems(), basket.getCustomer()));
+	    Long basketId = basketService.save(basket);
+	    
 	    Map<String, String> responsePayload = new HashMap<>();
 	    responsePayload.put(ResponseConstants.STATUS, ResponseConstants.SUCCESS);
-	    responsePayload.put(ResponseConstants.RESPONSE, String.format("Successfully created basket ID - %1$s", basketId));
+	    responsePayload.put(ResponseConstants.RESPONSE, String.format(ResponseConstants.BASKET_CREATED_SUCCESSFULLY, basketId));
 
 	    return new ResponseEntity<>(responsePayload, HttpStatus.CREATED);
 	}
@@ -59,7 +60,7 @@ public class BasketController {
 	      @RequestBody OrderItem orderItem) {
 
 		if(Objects.isNull(orderItem)) {
-			return new ResponseEntity<>("Cannot add empty item to basket.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(ResponseConstants.CANNOT_ADD_EMPTY_ITEM, HttpStatus.BAD_REQUEST);
 		}
 		
 		//check if basket exists
@@ -69,13 +70,13 @@ public class BasketController {
 	    	Customer customer = savedBasket.getCustomer();
 	    	if(null != customer && null != customer.getId() && customerId == customer.getId().longValue())  {
 	    		Long itemId = basketService.addOrderItem(savedBasket, orderItem);
-	    		return new ResponseEntity<>(String.format("Item added to the basket. ID: %d", itemId) , HttpStatus.OK);
+	    		return new ResponseEntity<>(String.format(ResponseConstants.ITEM_ADDED_TO_BASKET, itemId) , HttpStatus.OK);
 	    	} else {
-	    		return new ResponseEntity<>("Incorrect customer id sent", HttpStatus.BAD_REQUEST);
+	    		return new ResponseEntity<>(ResponseConstants.INCORRECT_CUSTOMER_ID, HttpStatus.BAD_REQUEST);
 	    	}
 	    }
 
-	    return new ResponseEntity<>("Invalid basket id - basket not found", HttpStatus.NOT_FOUND);
+	    return new ResponseEntity<>(ResponseConstants.INVALID_BASKET_ID, HttpStatus.NOT_FOUND);
 	  }
 
 	@DeleteMapping(value = "/{basketId}/{customerId}/delete/{orderItemIdToRemove}")
@@ -93,15 +94,15 @@ public class BasketController {
 	    		if(Objects.nonNull(orderItem)){
 	    			basketService.deleteItem(orderItem);
 	    		} else {
-	    		    return new ResponseEntity<>("Invalid item id - item not found in the basket", HttpStatus.NOT_FOUND);	
+	    		    return new ResponseEntity<>(ResponseConstants.INVALID_ITEM_ID, HttpStatus.NOT_FOUND);	
 	    		}
 	    	} else {
-	    		return new ResponseEntity<>("Incorrect customer id sent", HttpStatus.BAD_REQUEST);
+	    		return new ResponseEntity<>(ResponseConstants.INCORRECT_CUSTOMER_ID, HttpStatus.BAD_REQUEST);
 	    	}
 	     
-	      return new ResponseEntity<>(String.format("Item with ID %d removed from basket", orderItemIdToRemove), HttpStatus.OK);
+	      return new ResponseEntity<>(String.format(ResponseConstants.ITEM_REMOVED_FROM_BASKET, orderItemIdToRemove), HttpStatus.OK);
 	    }
 
-	    return new ResponseEntity<>("Invalid basket id - basket not found", HttpStatus.NOT_FOUND);
+	    return new ResponseEntity<>(ResponseConstants.INVALID_BASKET_ID, HttpStatus.NOT_FOUND);
 	  }
 }

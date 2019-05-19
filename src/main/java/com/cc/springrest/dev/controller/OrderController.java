@@ -18,6 +18,7 @@ import com.cc.springrest.dev.model.Basket;
 import com.cc.springrest.dev.model.Customer;
 import com.cc.springrest.dev.service.BasketService;
 import com.cc.springrest.dev.service.OrderService;
+import com.cc.springrest.dev.utils.ResponseConstants;
 
 @RestController
 @RequestMapping("/order")
@@ -36,23 +37,23 @@ public class OrderController {
 		Basket savedBasket = basketService.findById(basketId);
 	    if (null != savedBasket) {
 	    	if(CollectionUtils.isEmpty(savedBasket.getOrderItems())) {
-	    		return new ResponseEntity<>("Order cannot be created for empty basket", HttpStatus.NOT_FOUND);
+	    		return new ResponseEntity<>(ResponseConstants.CANNOT_CREATE_ORDER_BASKET_EMPTY, HttpStatus.NOT_FOUND);
 	    	}
 	    	//check if order is already places for this basket
 	    	if(Objects.nonNull(savedBasket.getOrderItems().get(0).getOrder())) {
-	    		return new ResponseEntity<>("Order already created for this basket", HttpStatus.BAD_REQUEST);
+	    		return new ResponseEntity<>(ResponseConstants.ORDER_CREATED_ALREADY, HttpStatus.BAD_REQUEST);
 	    	}
 	    	//validate customer id
 	    	Customer customer = savedBasket.getCustomer();
 	    	if(null != customer && null != customer.getId() && customerId == customer.getId().longValue()) {
 	    		Long orderId = orderService.createOrder(customer, savedBasket);
-	    		return new ResponseEntity<>(String.format("Successfully created new order with ID : %d", orderId), HttpStatus.CREATED);
+	    		return new ResponseEntity<>(String.format(ResponseConstants.ORDER_CREATED_SUCCESSFULLY, orderId), HttpStatus.CREATED);
 	    	} else {
-	    		return new ResponseEntity<>("Incorrect customer id sent", HttpStatus.BAD_REQUEST);
+	    		return new ResponseEntity<>(ResponseConstants.INCORRECT_CUSTOMER_ID, HttpStatus.BAD_REQUEST);
 	    	}
 	    }
 
-	    return new ResponseEntity<>("Invalid basket id - basket not found", HttpStatus.NOT_FOUND);
+	    return new ResponseEntity<>(ResponseConstants.INVALID_BASKET_ID, HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping(value = "/getOrdersForCustomer/{customerId}")
@@ -60,7 +61,7 @@ public class OrderController {
 		
 		List<OrderDTO> orders = orderService.getOrdersForCustomer(customerId);
 		if(CollectionUtils.isEmpty(orders)) {
-			return new ResponseEntity<>("No orders found for this customer", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(ResponseConstants.NO_ORDER_FOUND_FOR_CUSTOMER, HttpStatus.NOT_FOUND);
 		} 
 		
 		return new ResponseEntity<>(orders, HttpStatus.FOUND);
@@ -71,7 +72,7 @@ public class OrderController {
 		
 		OrderDTO order = orderService.getOrderById(orderId);
 		if(Objects.isNull(order)) {
-			return new ResponseEntity<>("Order Not Found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(ResponseConstants.ORDER_NOT_FOUND, HttpStatus.NOT_FOUND);
 		} 
 		
 		return new ResponseEntity<>(order, HttpStatus.FOUND);

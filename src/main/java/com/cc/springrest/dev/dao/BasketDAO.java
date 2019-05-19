@@ -7,11 +7,6 @@ import com.cc.springrest.dev.model.OrderItem;
 
 @Repository
 public class BasketDAO extends BaseDAO {
-
-	public void createNewBasket(Basket basket) {
-		getSession().save(basket);
-	}
-	
 	public Long save(Basket basket) {
 		return (Long) getSession().save(basket);
 	}

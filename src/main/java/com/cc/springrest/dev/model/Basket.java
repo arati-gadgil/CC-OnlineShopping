@@ -42,10 +42,13 @@ public class Basket implements Serializable {
 	public Basket() {}
 
 	public Basket(List<OrderItem> orderItems, Customer customer) {
-		for (OrderItem orderItem: orderItems) {
-	    	orderItem.setBasket(this);
-	    }
-	    this.orderItems = orderItems;
+		if (! CollectionUtils.isEmpty(orderItems)) {
+			for (OrderItem orderItem: orderItems) {
+		    	orderItem.setBasket(this);
+		    }
+		    this.orderItems = orderItems;
+		}
+		
 	    this.customer = customer;
 	  }
 
