@@ -1,0 +1,14 @@
+name: CI_CD
+
+on: [push]
+
+jobs:
+  run-shell-command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo something
+        run: echo "Hello, this is first step !!"
+      - name: multiple commands
+        run: |
+          java -version
+          node -v
